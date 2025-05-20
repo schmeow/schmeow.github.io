@@ -1,0 +1,297 @@
+@font-face {
+    font-family: "Pixelated MS Sans Serif";
+    src: url("fonts/converted/ms_sans_serif.woff") format("woff");
+    src: url("fonts/converted/ms_sans_serif.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Pixelated MS Sans Serif";
+    src: url("fonts/converted/ms_sans_serif_bold.woff") format("woff");
+    src: url("fonts/converted/ms_sans_serif_bold.woff2") format("woff2");
+    font-weight: bold;
+    font-style: normal;
+}
+
+body {
+    margin: 0%;
+    padding: 0%;
+    background: #008080;
+    font-family: "Pixelated MS Sans Serif";
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#taskbar {
+    position: fixed;
+    width: 100%;
+    height: 4%;
+    bottom: 0%;
+    left: 0%;
+    padding: .25%;
+    background-color: #c3c3c3;
+    display: inline;
+    align-items: center;
+}
+
+#start {
+    height: 100%;
+    font-family: "Pixelated MS Sans Serif";
+    font-size: large;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pin {
+    height: 100%;
+    width: 10%;
+    font-family: "Pixelated MS Sans Serif";
+    font-size: large;
+    display: inline-flex;
+    align-items: center;
+    transform: translateY(-22%);
+    margin-left: .25%;
+}
+
+#time {
+    height: 70%;
+    width: 5%;
+    position: absolute;
+    right: 1%;
+    justify-content: center;
+}
+
+:root {
+    /* colors */
+    --text-color: #222222;
+    --surface: #c0c0c0;
+    --button-highlight: #ffffff;
+    --button-face: #dfdfdf;
+    --button-shadow: #808080;
+    --window-frame: #0a0a0a;
+    --dialog-blue: #000080;
+    --dialog-blue-light: #1084d0;
+    --dialog-gray: #808080;
+    --dialog-gray-light: #b5b5b5;
+    --link-blue: #0000ff;
+
+      /* Spacing */
+    --element-spacing: 8px;
+    --grouped-button-spacing: 4px;
+    --grouped-element-spacing: 6px;
+    --radio-width: 12px;
+    --checkbox-width: 13px;
+    --radio-label-spacing: 6px;
+    --range-track-height: 4px;
+    --range-spacing: 10px;
+
+    /* Borders */
+    --border-width: 1px;
+    --border-raised-outer: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-highlight);
+    --border-raised-inner: inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-face);
+    --border-sunken-outer: inset -1px -1px var(--button-highlight), inset 1px 1px var(--window-frame);
+    --border-sunken-inner: inset -2px -2px var(--button-face), inset 2px 2px var(--button-shadow);
+    --default-button-border-raised-outer: inset -2px -2px var(--window-frame), inset 1px 1px var(--window-frame);
+    --default-button-border-raised-inner: inset 2px 2px var(--button-highlight), inset -3px -3px var(--button-shadow), inset 3px 3px var(--button-face);
+    --default-button-border-sunken-outer: inset 2px 2px var(--window-frame), inset -1px -1px var(--window-frame);
+    --default-button-border-sunken-inner: inset -2px -2px var(--button-highlight), inset 3px 3px var(--button-shadow), inset -3px -3px var(--button-face);
+
+    /* Window borders flip button-face and button-highlight */
+    --border-window-outer: inset -1px -1px var(--window-frame), inset 1px 1px var(--button-face);
+    --border-window-inner: inset -2px -2px var(--button-shadow), inset 2px 2px var(--button-highlight);
+
+    /* Field borders (checkbox, input, etc) flip window-frame and button-shadow */
+    --border-field: inset -1px -1px var(--button-highlight), inset 1px 1px var(--button-shadow), inset -2px -2px var(--button-face), inset 2px 2px var(--window-frame);
+    --border-status-field: inset -1px -1px var(--button-face), inset 1px 1px var(--button-shadow);
+
+    /* Tabs */
+    --border-tab: inset -1px 0 var(--window-frame), inset 1px 1px var(--button-face), inset -2px 0 var(--button-shadow), inset 2px 2px var(--button-highlight)
+}
+
+button,
+input[type="submit"],
+input[type="reset"] {
+  box-sizing: border-box;
+  border: none;
+  color: transparent;
+  text-shadow: 0 0 var(--text-color);
+  background: var(--surface);
+  box-shadow: var(--border-raised-outer), var(--border-raised-inner);
+  border-radius: 0;
+
+  min-width: 75px;
+  min-height: 23px;
+  padding: 0 12px;
+}
+
+button.default,
+input[type="submit"].default,
+input[type="reset"].default {
+  box-shadow: var(--default-button-border-raised-outer), var(--default-button-border-raised-inner);
+}
+
+.vertical-bar {
+  width: 4px;
+  height: 20px;
+  background: #c0c0c0;
+  box-shadow: var(--border-raised-outer), var(--border-raised-inner);
+}
+
+button:not(:disabled):active,
+input[type="submit"]:not(:disabled):active,
+input[type="reset"]:not(:disabled):active {
+  box-shadow: var(--border-sunken-outer), var(--border-sunken-inner);
+  text-shadow: 1px 1px var(--text-color);
+}
+
+button.default:not(:disabled):active,
+input[type="submit"].default:not(:disabled):active,
+input[type="reset"].default:not(:disabled):active {
+  box-shadow: var(--default-button-border-sunken-outer), var(--default-button-border-sunken-inner);
+}
+
+@media (not(hover)) {
+  button:not(:disabled):hover,
+  input[type="submit"]:not(:disabled):hover,
+  input[type="reset"]:not(:disabled):hover {
+    box-shadow: var(--border-sunken-outer), var(--border-sunken-inner);
+  }
+}
+
+button:focus,
+input[type="submit"]:focus,
+input[type="reset"]:focus {
+  outline: 1px dotted #000000;
+  outline-offset: -4px;
+}
+
+button::-moz-focus-inner,
+input[type="submit"]::-moz-focus-inner,
+input[type="reset"]::-moz-focus-inner {
+  border: 0;
+}
+
+:disabled,
+:disabled + label,
+input[readonly],
+input[readonly] + label {
+  color: var(--button-shadow);
+}
+
+button:disabled,
+input[type="submit"]:disabled,
+input[type="reset"]:disabled,
+:disabled + label {
+  text-shadow: 1px 1px 0 var(--button-highlight);
+}
+
+.status-bar-field {
+    box-shadow: inset -1px -1px #dfdfdf, inset 1px 1px #808080;
+    padding: 2px 3px;
+    height: auto;
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.window {
+    box-shadow: var(--border-window-outer), var(--border-window-inner);
+    background: var(--surface);
+    padding: 3px;
+    position: absolute;
+    cursor: move;
+    user-select: none;
+    top: 25%; 
+    left: 20%; 
+  }
+  
+  .window[role=tabpanel] {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .window-body {
+    margin: var(--element-spacing);
+    width: max-content;
+  }
+  
+  .title-bar {
+    background: var(--dialog-blue);
+    padding: 3px 2px 3px 3px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .title-bar.inactive {
+    background: linear-gradient(
+      90deg,
+      var(--dialog-gray),
+      var(--dialog-gray-light)
+    );
+  }
+  
+  .title-bar-text {
+    font-weight: bold;
+    color: white;
+    letter-spacing: 0;
+    margin-right: 24px;
+  }
+  
+  .title-bar-controls {
+    display: flex;
+  }
+  
+  .title-bar-controls button {
+    padding: 0;
+    display: block;
+    min-width: 16px;
+    min-height: 14px;
+  }
+  
+  .title-bar-controls button:active {
+    padding: 0;
+  }
+  
+  .title-bar-controls button:focus {
+    outline: none;
+  }
+  
+  .title-bar-controls button[aria-label="Minimize"] {
+    background-image: url("icons/minimize.svg");
+    background-repeat: no-repeat;
+    background-position: bottom 3px left 4px;
+  }
+  
+  .title-bar-controls button[aria-label="Maximize"] {
+    background-image: url("icons/maximize.svg");
+    background-repeat: no-repeat;
+    background-position: top 2px left 3px;
+  }
+  
+  .title-bar-controls button[aria-label="Restore"] {
+    background-image: url("icons/restore.svg");
+    background-repeat: no-repeat;
+    background-position: top 2px left 3px;
+  }
+  
+  .title-bar-controls button[aria-label="Help"] {
+    background-image: url("icons/help.svg");
+    background-repeat: no-repeat;
+    background-position: top 2px left 5px;
+  }
+  
+  .title-bar-controls button[aria-label="Close"] {
+    margin-left: 2px;
+    background-image: url("icons/close.svg");
+    background-repeat: no-repeat;
+    background-position: top 3px left 4px;
+  }
+
+/* */
