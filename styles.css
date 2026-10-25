@@ -44,6 +44,11 @@
     font-style: normal;
 }
 
+html {
+  background-color: #999789;
+  background-image: url("images/wallpaper.jpg");
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -724,11 +729,12 @@ button:disabled {
   }
 
   .window {
-    top: clamp(16px, 22dvh, 240px);
+    --window-top: clamp(16px, 22dvh, 240px);
+    top: var(--window-top);
     left: max(12px, calc(50vw - 300px));
     width: min(600px, calc(100vw - 24px)) !important;
     max-width: none !important;
-    height: min(400px, calc(100dvh - 72px)) !important;
+    height: min(400px, calc(100dvh - var(--window-top) - 60px)) !important;
     min-width: 0;
     min-height: 0;
     cursor: default;
@@ -903,7 +909,7 @@ button:disabled {
   }
 
   #gallery {
-    height: min(560px, calc(100dvh - 72px)) !important;
+    height: min(560px, calc(100dvh - var(--window-top) - 60px)) !important;
   }
 
   #gallery.window.max {
@@ -916,7 +922,7 @@ button:disabled {
   #welcome:not(.max),
   #about:not(.max) {
     height: auto !important;
-    max-height: calc(100dvh - 72px);
+    max-height: calc(100dvh - var(--window-top) - 60px);
   }
 
   #welcome:not(.max) .window-body,
@@ -990,7 +996,7 @@ button:disabled {
   }
 
   #gallery {
-    height: min(520px, calc(100dvh - 72px)) !important;
+    height: min(520px, calc(100dvh - var(--window-top) - 60px)) !important;
   }
 
   #gallery.window.max {
