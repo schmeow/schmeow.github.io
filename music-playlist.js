@@ -24,5 +24,10 @@ window.MUSIC_TRACKS = [
     title: "The Book Lovers",
     artist: "Broadcast",
     src: "music/The Book Lovers - Broadcast.mp3"
+  },
+  {
+    title: "Swim Between Trees",
+    artist: "flipturn",
+    src: "music/swim-between-trees-flipturn.mp3"
   }
 ];
