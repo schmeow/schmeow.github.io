@@ -1,37 +1,48 @@
 <!DOCTYPE html>
-<html class="bigmax">
+<html class="bigmax" lang="en">
 <head>
   <title>schmeow</title>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles.css"/>
 </head>
 
 <body class="bigmax">
   <div class="menu" style="border-top: 2px solid rgb(235, 235, 235)">
-    <button id="start"> <img src="images/start.jpeg" style="width:50%;height:80%;" >Start</button>
+    <button id="start" type="button" aria-expanded="false" aria-controls="start-menu" onclick="ToggleStartMenu(event)"><img src="images/start.jpeg" alt="">Start</button>
     
     <button class="tab" id="welcometab" onclick="ShowTab('welcome')"> Welcome </button>
 
-    <button class="tab" id="abouttab" onclick="ShowTab('about')"> About </button>
+    <button class="tab hide" id="abouttab" onclick="ShowTab('about')"> About </button>
 
-    <button class="tab" id="projectstab" onclick="ShowTab('projects')"> Projects </button>
+    <button class="tab hide" id="projectstab" onclick="ShowTab('projects')"> Projects </button>
 
-    <button class="tab" id="resumetab" onclick="ShowTab('resume')"> Resume </button>
+    <button class="tab hide" id="resumetab" onclick="ShowTab('resume')"> Resume </button>
 
-    <button class="tab" id="gallerytab" onclick="ShowTab('gallery')"> Gallery </button>
+    <button class="tab hide" id="gallerytab" onclick="ShowTab('gallery')"> Gallery </button>
     
-    <span class="status-bar-field" id="time" style="width:6%;height:70%;"></span>
+    <span class="status-bar-field" id="time"></span>
+  </div>
+
+  <div class="start-menu hide" id="start-menu" role="menu" aria-label="Start menu">
+    <div class="start-menu-rail" aria-hidden="true">schmeow</div>
+    <div class="start-menu-items">
+      <button type="button" role="menuitem" onclick="LaunchFromStart('welcome')"><img src="images/welcome.png" alt="">Welcome</button>
+      <button type="button" role="menuitem" onclick="LaunchFromStart('about')"><img src="images/about.png" alt="">About</button>
+      <button type="button" role="menuitem" onclick="LaunchFromStart('projects')"><img src="images/projects.png" alt="">Projects</button>
+      <button type="button" role="menuitem" onclick="LaunchFromStart('resume')"><img src="images/Resume.png" alt="">Resume</button>
+      <button type="button" role="menuitem" onclick="LaunchFromStart('gallery')"><img src="images/gallery.png" alt="">Gallery</button>
+    </div>
   </div>
 
   <div class="shortcuts-container"> 
-    <button class="shortcut" id="sc-about" onclick="OpenTab('welcome')"><div #test><img src="images/welcome.png" style="height: 40px; width: 40px; margin-bottom: 5px;"></div> <br><span>Welcome</span></button>
-    <button class="shortcut" id="sc-about" onclick="OpenTab('about')" style="margin-left: 18px;"><img src="images/about.png" style="height: 40px; width: 40px; margin-bottom: 5px;"> <br><span>About</span></button>
-    <button class="shortcut" id="sc-about" onclick="OpenTab('projects')"><div #test><img src="images/projects.png" style="height: 40px; width: 40px; margin-bottom: 5px;"></div> <br><span>Projects</span></button>
-    <button class="shortcut" id="sc-about" onclick="OpenTab('gallery')"><div #test><img src="images/gallery.png" style="height: 40px; width: 40px; margin-bottom: 5px;"></div> <br><span>Gallery</span></button>
+    <button class="shortcut" onclick="OpenTab('welcome')"><img src="images/welcome.png" alt=""><span>Welcome</span></button>
+    <button class="shortcut" onclick="OpenTab('about')"><img src="images/about.png" alt=""><span>About</span></button>
+    <button class="shortcut" onclick="OpenTab('projects')"><img src="images/projects.png" alt=""><span>Projects</span></button>
+    <button class="shortcut" onclick="OpenTab('gallery')"><img src="images/gallery.png" alt=""><span>Gallery</span></button>
   </div>
 
-  <div class="window" id="about" style="height: max-content">
+  <div class="window hide" id="about" style="height: max-content">
     <header>
       <div class="title-bar" id="aboutheader">
         <div class="title-bar-text">About</div>
@@ -52,18 +63,18 @@
       <div class="content-area">
         <div class="row" style="padding:0 1% 0 1%; display:flex; flex-direction: row; align-items: flex-start;">
           <div class="column" style="padding:0 1% 0 1%; flex: 1; min-width: 0;">
-            <p>I am a senior at Darien High School and am 18 years old. I enjoy coding and making art in my free time! <br>
-              I'm planning to study computer science in college, and hope to work in cybersecurity in the future. <br><br>
-              My current projects include a glove hand tracker, a drone, and this website! <br>
-              You can find more information about my past and current projects in the Projects Tab.
+            <p>I am a freshman at UMass Amherst studying Computer Science, Political Science, and Math. I enjoy coding and making art in my free time! <br>
+              I'm currently the Treasurer of the Cybersecurity Club at UMass Amherst and a member of the eCTF team.
+              <br> <br>
+              My current projects include this website and development for eCTF. You can find more information about my past and current projects in the Projects Tab.
             </p>
             <div style="display: flex; align-items: center; gap: 10px;">
               <button onclick="OpenTab('resume')" style="padding: 8px 12px;"><b>Resume</b></button>
-              <a href="https://www.linkedin.com/in/anoushka-muchhal-46033734a/" target="_blank">
-                <img src="images/linkedin.png" style="width: 25px; height: auto; margin: 0;">
+              <a href="https://www.linkedin.com/in/anoushka-muchhal-46033734a/" target="_blank" rel="noopener noreferrer" aria-label="Anoushka on LinkedIn">
+                <img src="images/linkedin.png" alt="" style="width: 25px; height: auto; margin: 0;">
               </a>
-              <a href="https://github.com/schmeow" target="_blank">
-                <img src="images/github.png" style="width: 25px; height: auto;">
+              <a href="https://github.com/schmeow" target="_blank" rel="noopener noreferrer" aria-label="Anoushka on GitHub">
+                <img src="images/github.png" alt="" style="width: 25px; height: auto;">
               </a>
             </div>
           </div>
@@ -90,10 +101,10 @@
       <div class="row" style="display:flex; flex-direction: row; align-items: flex-start;">
         <div class="column" style="padding: 0px 10px 0px 10px; flex: 1; min-width: 0;">
           <p>Hi there ! I'm Anoushka and this is my little site !!!</p>
-          <p>This whole site is based off of Windows 95 (if you couldn't tell already), and made using base css and js. I use some css from <a href="https://github.com/jdan/98.css" target=_blank>98.CSS</a> </p>
+          <p>This whole site is based off of Windows 95 (if you couldn't tell already), and made using base css and js. I use some css from <a href="https://github.com/jdan/98.css" target="_blank" rel="noopener noreferrer">98.CSS</a> </p>
           <p>You can use the shortcuts at the top of the screen to open up new tabs, just like a computer!</p>
-          <img src="images/stamp1.gif" style="padding-right: 1em;"> <img src="images/stamp3.png"> <br>
-          <img src="images/pixel1.gif" style= "padding-left: 2em;">
+          <img src="images/stamp1.gif" alt="" style="padding-right: 1em;"> <img src="images/stamp3.png" alt=""> <br>
+          <img src="images/pixel1.gif" alt="" style= "padding-left: 2em;">
         </div>
         <div class="column images" style="flex-shrink: 0; padding: 20px 20px 20px 0; max-width: 50%;">
           <img src="images/mefr.jpg" style="max-width: 100%; height: auto; display: block;" alt="meow">
@@ -102,7 +113,7 @@
     </div>
   </div>
 
-  <div class="window" id="resume">
+  <div class="window hide" id="resume">
     <header>
       <div class="title-bar" id="resumeheader">
         <div class="title-bar-text">Resume</div>
@@ -114,11 +125,11 @@
       </div>
     </header>
     <div class="window-body" style="padding: 0; margin: 0;">
-      <img src="images/Resume.png">
+      <img src="images/Resume.png" alt="Anoushka's resume">
     </div>
   </div>
 
-  <div class="window" id="projects" style="height: max-content">
+  <div class="window hide" id="projects" style="height: max-content">
     <header>
       <div class="title-bar" id="projectsheader">
         <div class="title-bar-text">Projects</div>
@@ -171,19 +182,19 @@
       </div>
 
       <div id="projects-wsrp" class=" content-area hide" style="padding:5px 10px 23% 10px;"><b>Analyzing Peg Solitare Using Multiway Graphs</b> <br> <br>
-        During the summer of 2024 I attended the Wolfram High School Summer Research Program, also known as WSRP. With the help of my mentor Adam Millar, I created a computational essay about Peg Solitaire game states, and how to graph them using multiway systems. You can find my full essay <a href="https://community.wolfram.com/groups/-/m/t/3215233" target=_blank>here</a>.
+        During the summer of 2024 I attended the Wolfram High School Summer Research Program, also known as WSRP. With the help of my mentor Adam Millar, I created a computational essay about Peg Solitaire game states, and how to graph them using multiway systems. You can find my full essay <a href="https://community.wolfram.com/groups/-/m/t/3215233" target="_blank" rel="noopener noreferrer">here</a>.
         <button onclick="SwitchContentProj('wsrp', 'main')" class="projbutton backbutton" style="top:65%">Back</button>
       </div>
 
       <div id="projects-welp" class="content-area hide" style="padding:5px 10px 23% 10px;"> <b>Calculating Walkability</b> <br> <br>
-        After my time at the Wolfram High School Summer Research Program, I was invited back for the Wolfram Emerging Leader Program. The program lasted around four months, and I worked with two other students to create a program to calculate the walkability of cities around the world. You can read the essay we created and more about the project we created   <a href="https://community.wolfram.com/groups/-/m/t/3379935" target=_blank>here</a>.
+        After my time at the Wolfram High School Summer Research Program, I was invited back for the Wolfram Emerging Leader Program. The program lasted around four months, and I worked with two other students to create a program to calculate the walkability of cities around the world. You can read the essay we created and more about the project we created   <a href="https://community.wolfram.com/groups/-/m/t/3379935" target="_blank" rel="noopener noreferrer">here</a>.
         <button onclick="SwitchContentProj('welp', 'main')" class="projbutton backbutton" style="top:60%">Back</button>
       </div>
 
     </div>
   </div>
 
-  <div class="window" id="gallery" style="width: 900px; height: max-content;">
+  <div class="window hide" id="gallery">
     <header>
       <div class="title-bar" id="galleryheader">
         <div class="title-bar-text">Gallery</div>
@@ -201,31 +212,55 @@
         <span class="menu-item"><u>S</u>earch</span>
         <span class="menu-item"><u>H</u>elp</span>
       </div>
-      <div class="content-area">
-        <div class="row" style="display:flex; flex-direction: row; align-items: flex-start;">
-        <div class="column" style="padding: 20px; flex: 1; width: 300px; height: max;">
-          <button class="gal-button" id="gal-computers" onclick="SwitchContentGallery('comp')"><img src="images/art/computers.jpg"></button>
-          <button class="gal-button" id="gal-charcoal" onclick="SwitchContentGallery('char')"><img src="images/art/charcoal.jpg"></button>
-          <button class="gal-button" id="gal-circuits" onclick="SwitchContentGallery('circ')"><img src="images/art/circuit.jpg"></button>
-          <button class="gal-button" id="gal-collage" onclick="SwitchContentGallery('coll')"><img src="images/art/collage.jpg"></button>
-          <button class="gal-button" id="gal-camera" onclick="SwitchContentGallery('cam')"><img src="images/art/camera.jpg"></button>
-          <button class="gal-button" id="gal-deer" onclick="SwitchContentGallery('de')"><img src="images/art/deer.jpg"></button>
-          <button class="gal-button" id="gal-wires" onclick="SwitchContentGallery('wi')"><img src="images/art/wires.jpg"></button>
-          <button class="gal-button" id="gal-sheep" onclick="SwitchContentGallery('se')"><img src="images/art/sheep.jpg"></button>
+      <div class="content-area gallery-layout">
+        <div class="gallery-preview" aria-live="polite">
+          <figure id="gal-comp" class="gal-image">
+            <div class="gal-canvas"><img src="images/art/computers.jpg" alt="Computer drawing"></div>
+            <figcaption class="gal-caption"><span class="gal-credit"><strong>Lost</strong>, Pencil on Paper</span></figcaption>
+          </figure>
+          <figure id="gal-char" class="gal-image hide">
+            <div class="gal-canvas"><img src="images/art/charcoal.jpg" alt="Charcoal drawing"></div>
+            <figcaption class="gal-caption"><span class="gal-credit"><strong>Distance</strong>, Charcoal on Paper</span></figcaption>
+          </figure>
+          <figure id="gal-circ" class="gal-image hide">
+            <div class="gal-canvas"><img src="images/art/circuit.jpg" alt="Circuit drawing"></div>
+            <figcaption class="gal-caption"><span class="gal-credit"><strong>Birds-Eye View</strong>, Colored Pencil on Paper</span></figcaption>
+          </figure>
+          <figure id="gal-coll" class="gal-image hide">
+            <div class="gal-canvas"><img src="images/art/collage.jpg" alt="Paper collage"></div>
+            <figcaption class="gal-caption"><span class="gal-credit"><strong>Overload</strong>, Paper Collage</span><span class="gal-note">Part of the 2025 iCreate Art Show at the Bruce Museum</span></figcaption>
+          </figure>
+          <figure id="gal-cam" class="gal-image hide">
+            <div class="gal-canvas"><img src="images/art/camera.jpg" alt="Camera artwork"></div>
+            <figcaption class="gal-caption"><span class="gal-credit"><strong>Fault Inject</strong>, Oil Pastel on Wood</span></figcaption>
+          </figure>
+          <figure id="gal-de" class="gal-image hide">
+            <div class="gal-canvas"><img src="images/art/deer.jpg" alt="Deer drawing"></div>
+            <figcaption class="gal-caption"><span class="gal-credit"><strong>Modeling</strong>, Highlighter on Paper</span><span class="gal-note">Part of the 2025 Darien UCBC Art Show</span></figcaption>
+          </figure>
+          <figure id="gal-wi" class="gal-image hide">
+            <div class="gal-canvas"><img src="images/art/wires.jpg" alt="Wires drawing"></div>
+            <figcaption class="gal-caption"><span class="gal-credit"><strong>Escape</strong>, Pencil on Paper</span></figcaption>
+          </figure>
+          <figure id="gal-se" class="gal-image hide">
+            <div class="gal-canvas"><img src="images/art/sheep.jpg" alt="Sheep painting"></div>
+            <figcaption class="gal-caption"><span class="gal-credit"><strong>Digitization</strong>, Acrylic Paint on Wood</span></figcaption>
+          </figure>
         </div>
-        <div class="column" style="flex-shrink: 0; padding: 20px 20px 20px 0; min-width: 200px;">
-          <div id="gal-main" class="gal-image">click on any of the images on the left to enlarge and view info about them!</div>
-          <div id="gal-comp" class="gal-image hide" style="object-fit: contain"><img src="images/art/computers.jpg">Pencil on Paper</div>
-          <div id="gal-char" class="gal-image hide" style="object-fit: contain"><img src="images/art/charcoal.jpg">Charcoal on Paper</div>
-          <div id="gal-circ" class="gal-image hide" style="object-fit: contain"><img src="images/art/circuit.jpg">Colored Pencil on Paper</div>
-          <div id="gal-coll" class="gal-image hide" style="object-fit: contain"><img src="images/art/collage.jpg">Paper Collage <br> <br> Part of the 2025 iCreate Art Show at the Bruce Mueseum</div>
-          <div id="gal-cam" class="gal-image hide" style="object-fit: contain"><img src="images/art/camera.jpg">Oil Pastel on Wood</div>
-          <div id="gal-de" class="gal-image hide" style="object-fit: contain"><img src="images/art/deer.jpg">Highlighter on Paper <br> <br> Part of the 2025 Darien UCBC Art Show</div>
-          <div id="gal-wi" class="gal-image hide" style="object-fit: contain"><img src="images/art/wires.jpg">Pencil on Paper</div>
-          <div id="gal-se" class="gal-image hide" style="object-fit: contain"><img src="images/art/sheep.jpg">Acrylic Paint on Wood</div>
 
+        <div class="gallery-browser">
+          <div class="gallery-browser-title">Choose an artwork:</div>
+          <div class="gallery-thumbnails" role="list" aria-label="Artwork thumbnails">
+            <button class="gal-button active" type="button" data-gallery-item="comp" aria-label="View computer drawing" aria-pressed="true" onclick="SwitchContentGallery('comp')"><img src="images/art/computers.jpg" alt=""></button>
+            <button class="gal-button" type="button" data-gallery-item="char" aria-label="View charcoal drawing" aria-pressed="false" onclick="SwitchContentGallery('char')"><img src="images/art/charcoal.jpg" alt=""></button>
+            <button class="gal-button" type="button" data-gallery-item="circ" aria-label="View circuit drawing" aria-pressed="false" onclick="SwitchContentGallery('circ')"><img src="images/art/circuit.jpg" alt=""></button>
+            <button class="gal-button" type="button" data-gallery-item="coll" aria-label="View paper collage" aria-pressed="false" onclick="SwitchContentGallery('coll')"><img src="images/art/collage.jpg" alt=""></button>
+            <button class="gal-button" type="button" data-gallery-item="cam" aria-label="View camera artwork" aria-pressed="false" onclick="SwitchContentGallery('cam')"><img src="images/art/camera.jpg" alt=""></button>
+            <button class="gal-button" type="button" data-gallery-item="de" aria-label="View deer drawing" aria-pressed="false" onclick="SwitchContentGallery('de')"><img src="images/art/deer.jpg" alt=""></button>
+            <button class="gal-button" type="button" data-gallery-item="wi" aria-label="View wires drawing" aria-pressed="false" onclick="SwitchContentGallery('wi')"><img src="images/art/wires.jpg" alt=""></button>
+            <button class="gal-button" type="button" data-gallery-item="se" aria-label="View sheep painting" aria-pressed="false" onclick="SwitchContentGallery('se')"><img src="images/art/sheep.jpg" alt=""></button>
+          </div>
         </div>
-      </div>
       </div>
     </div>
   </div>

@@ -1,15 +1,55 @@
-CloseTab('about');
-CloseTab('projects');
-CloseTab('resume');
-CloseTab('gallery');
+const windowZIndexBase = 10;
+let windowZIndexCounter = 10;
 
-var windowZIndexBase = 10; 
-var windowZIndexCounter = 10;
+function isCompactMode() {
+  return window.matchMedia('(max-width: 900px)').matches;
+}
+
+function getClientPosition(event) {
+  if (event.touches && event.touches.length > 0) {
+    return { x: event.touches[0].clientX, y: event.touches[0].clientY };
+  }
+  return { x: event.clientX, y: event.clientY };
+}
+
+function ToggleStartMenu(event) {
+  if (event) event.stopPropagation();
+
+  const menu = document.getElementById('start-menu');
+  const button = document.getElementById('start');
+  const willOpen = menu.classList.contains('hide');
+
+  menu.classList.toggle('hide');
+  button.setAttribute('aria-expanded', String(willOpen));
+}
+
+function CloseStartMenu() {
+  document.getElementById('start-menu').classList.add('hide');
+  document.getElementById('start').setAttribute('aria-expanded', 'false');
+}
+
+function LaunchFromStart(id) {
+  OpenTab(id);
+  CloseStartMenu();
+}
+
+document.addEventListener('click', function(event) {
+  const menu = document.getElementById('start-menu');
+  if (!menu.contains(event.target) && event.target.id !== 'start') {
+    CloseStartMenu();
+  }
+});
+
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') CloseStartMenu();
+});
 
 function updateDateTime() {
-  const now = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+  const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   document.querySelector('#time').textContent = now;
 }
+
+updateDateTime();
 setInterval(updateDateTime, 1000);
 
 function initializeWindowZIndex(windowElement) {
@@ -20,14 +60,14 @@ function initializeWindowZIndex(windowElement) {
 }
 
 function getVisibleWindowsSorted() {
-  var allWindows = Array.from(document.getElementsByClassName('window'));
-  var visibleWindows = allWindows.filter(function(win) {
+  const allWindows = Array.from(document.getElementsByClassName('window'));
+  const visibleWindows = allWindows.filter(function(win) {
     return !win.classList.contains('hide');
   });
   
   visibleWindows.sort(function(a, b) {
-    var zIndexA = parseInt(a.style.zIndex) || windowZIndexBase;
-    var zIndexB = parseInt(b.style.zIndex) || windowZIndexBase;
+    const zIndexA = parseInt(a.style.zIndex) || windowZIndexBase;
+    const zIndexB = parseInt(b.style.zIndex) || windowZIndexBase;
     return zIndexA - zIndexB;
   });
   
@@ -36,9 +76,9 @@ function getVisibleWindowsSorted() {
 
 function bringWindowToFront(windowElement) {
   initializeWindowZIndex(windowElement);
-  var visibleWindows = getVisibleWindowsSorted();
+  const visibleWindows = getVisibleWindowsSorted();
 
-  var index = visibleWindows.indexOf(windowElement);
+  const index = visibleWindows.indexOf(windowElement);
   if (index !== -1) {
     visibleWindows.splice(index, 1);
   }
@@ -47,7 +87,7 @@ function bringWindowToFront(windowElement) {
     win.style.zIndex = windowZIndexBase + i;
   });
   
-  var topZIndex = windowZIndexBase + visibleWindows.length;
+  const topZIndex = windowZIndexBase + visibleWindows.length;
   windowElement.style.zIndex = topZIndex;
   
   if (topZIndex >= windowZIndexCounter) {
@@ -56,11 +96,11 @@ function bringWindowToFront(windowElement) {
 }
 
 function initializeAllWindows() {
-  var allWindows = document.getElementsByClassName('window');
-  var visibleCount = 0;
+  const allWindows = document.getElementsByClassName('window');
+  let visibleCount = 0;
   
-  for (var i = 0; i < allWindows.length; i++) {
-    var win = allWindows[i];
+  for (let i = 0; i < allWindows.length; i++) {
+    const win = allWindows[i];
     if (!win.classList.contains('hide')) {
       win.style.zIndex = windowZIndexBase + visibleCount;
       visibleCount++;
@@ -69,7 +109,7 @@ function initializeAllWindows() {
   
   windowZIndexCounter = windowZIndexBase + visibleCount;
   
-  var welcomeWindow = document.getElementById("welcome");
+  const welcomeWindow = document.getElementById("welcome");
   if (welcomeWindow && !welcomeWindow.classList.contains('hide')) {
     bringWindowToFront(welcomeWindow);
   }
@@ -77,30 +117,16 @@ function initializeAllWindows() {
 
 initializeAllWindows();
 
-var aboutWindow = document.getElementById("about");
-var welcomeWindow = document.getElementById("welcome");
-var projectsWindow = document.getElementById("projects");
-var resumeWindow = document.getElementById("resume");
-var galleryWindow = document.getElementById("gallery");
-
-
-dragElement(aboutWindow);
-dragElement(welcomeWindow);
-dragElement(projectsWindow);
-dragElement(resumeWindow);
-dragElement(galleryWindow);
-
-
-resizeElement(welcomeWindow);
-resizeElement(aboutWindow);
-resizeElement(projectsWindow);
-resizeElement(resumeWindow);
-resizeElement(galleryWindow);
+const windows = Array.from(document.getElementsByClassName('window'));
+windows.forEach(function(windowElement) {
+  dragElement(windowElement);
+  resizeElement(windowElement);
+});
 
 function dragElement(tab) {
-  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-  var header = document.getElementById(tab.id + "header");
-  var target = header || tab;
+  let pos3 = 0;
+  let pos4 = 0;
+  const header = document.getElementById(tab.id + "header");
 
   if (header) {
     header.onmousedown = dragMouseDown;
@@ -108,13 +134,6 @@ function dragElement(tab) {
   } else {
     tab.onmousedown = dragMouseDown;
     tab.ontouchstart = dragTouchStart;
-  }
-
-  function getClientPos(e) {
-    if (e.touches && e.touches.length > 0) {
-      return { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    }
-    return { x: e.clientX, y: e.clientY };
   }
 
   function dragMouseDown(e) {
@@ -125,7 +144,7 @@ function dragElement(tab) {
     }
     
     e.preventDefault();
-    var pos = getClientPos(e);
+    const pos = getClientPosition(e);
     pos3 = pos.x;
     pos4 = pos.y;
     document.onmouseup = closeDragElement;
@@ -135,8 +154,12 @@ function dragElement(tab) {
   }
 
   function dragTouchStart(e) {
+    if (e.target && (e.target.tagName === 'BUTTON' || e.target.closest('.title-bar-controls'))) {
+      return;
+    }
+
     e.preventDefault();
-    var pos = getClientPos(e);
+    const pos = getClientPosition(e);
     pos3 = pos.x;
     pos4 = pos.y;
     document.ontouchend = closeDragElement;
@@ -157,17 +180,16 @@ function dragElement(tab) {
   }
 
   function updatePosition(e) {
-    var pos = getClientPos(e);
+    const pos = getClientPosition(e);
 
-    pos1 = pos3 - pos.x;
-    pos2 = pos4 - pos.y;
+    const deltaX = pos3 - pos.x;
+    const deltaY = pos4 - pos.y;
     pos3 = pos.x;
     pos4 = pos.y;
-    
 
-    var newTop = tab.offsetTop - pos2;
-    var newLeft = tab.offsetLeft - pos1;
-    var menuHeight = 50; 
+    const newTop = tab.offsetTop - deltaY;
+    const newLeft = tab.offsetLeft - deltaX;
+    const menuHeight = 50;
     
     if (newTop < 0) {
       tab.style.top = 0 + "px";
@@ -200,12 +222,12 @@ function dragElement(tab) {
 
 
 function ShowTab(id) {
-  var element = document.getElementById(id); 
+  const element = document.getElementById(id);
   if (element.classList.contains('hide')) {
     element.classList.remove('hide');
     initializeWindowZIndex(element);
     bringWindowToFront(element);
-    var existingHandle = element.querySelector('.window-resize-handle');
+    const existingHandle = element.querySelector('.window-resize-handle');
     if (!existingHandle) {
       resizeElement(element);
     }
@@ -213,40 +235,40 @@ function ShowTab(id) {
     element.classList.add('hide');
   }
 }
-
-function Show(id) {
-  var element = document.getElementById(id); 
-  if (element.classList.contains('hide')) {
-    element.classList.remove('hide');
-    initializeWindowZIndex(element);
-    bringWindowToFront(element);
-    var existingHandle = element.querySelector('.window-resize-handle');
-    if (!existingHandle) {
-      resizeElement(element);
-    }
-  } else {
-    element.classList.add('hide');
-  }
-}
-
 
 function CloseTab(id) {
-    ShowTab(id);
-    var element = document.getElementById(id + "tab"); 
-    element.classList.add('hide');
+  const windowElement = document.getElementById(id);
+
+  if (windowElement.classList.contains('max')) {
+    restoreWindow(windowElement);
+  }
+
+  windowElement.classList.add('hide');
+  document.getElementById(id + "tab").classList.add('hide');
 }
 
 function OpenTab(id) {
-  var element = document.getElementById(id + "tab"); 
-  if (element.classList.contains('hide')) {
-    element.classList.remove('hide');
-    ShowTab(id);
-    var windowElement = document.getElementById(id);
-    if (windowElement) {
-      var existingHandle = windowElement.querySelector('.window-resize-handle');
-      if (!existingHandle) {
-        resizeElement(windowElement);
-      }
+  const element = document.getElementById(id + "tab");
+  const windowElement = document.getElementById(id);
+
+  element.classList.remove('hide');
+
+  if (windowElement.classList.contains('hide')) {
+    windowElement.classList.remove('hide');
+    initializeWindowZIndex(windowElement);
+  }
+
+  bringWindowToFront(windowElement);
+
+  const existingHandle = windowElement.querySelector('.window-resize-handle');
+  if (!existingHandle) {
+    resizeElement(windowElement);
+  }
+
+  if (isCompactMode()) {
+    const body = windowElement.querySelector('.window-body');
+    if (body) {
+      body.scrollTop = 0;
     }
   }
 }
@@ -255,27 +277,23 @@ function OpenTab(id) {
 function resizeElement(windowElement) {
   if (!windowElement) return;
   
-  var existingHandle = windowElement.querySelector('.window-resize-handle');
+  const existingHandle = windowElement.querySelector('.window-resize-handle');
   if (existingHandle) {
     return;
   }
   
-  var resizeHandle = document.createElement('div');
+  const resizeHandle = document.createElement('div');
   resizeHandle.className = 'window-resize-handle';
   windowElement.appendChild(resizeHandle);
   
-  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-  var startWidth = 0, startHeight = 0, startX = 0, startY = 0;
-
-  function getClientPos(e) {
-    if (e.touches && e.touches.length > 0) {
-      return { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    }
-    return { x: e.clientX, y: e.clientY };
-  }
+  let pos3 = 0, pos4 = 0;
+  let startWidth = 0, startHeight = 0;
 
   function resizeMouseDown(e) {
     e = e || window.event;
+
+    if (isCompactMode()) return;
+
     e.preventDefault();
     e.stopPropagation();
     
@@ -283,15 +301,12 @@ function resizeElement(windowElement) {
       return;
     }
     
-    var pos = getClientPos(e);
+    const pos = getClientPosition(e);
     pos3 = pos.x;
     pos4 = pos.y;
     
     startWidth = windowElement.offsetWidth;
     startHeight = windowElement.offsetHeight;
-    startX = windowElement.offsetLeft;
-    startY = windowElement.offsetTop;
-    
     document.onmouseup = closeResizeElement;
     document.onmousemove = elementResize;
     
@@ -299,6 +314,8 @@ function resizeElement(windowElement) {
   }
 
   function resizeTouchStart(e) {
+    if (isCompactMode()) return;
+
     e.preventDefault();
     e.stopPropagation();
     
@@ -306,15 +323,12 @@ function resizeElement(windowElement) {
       return;
     }
     
-    var pos = getClientPos(e);
+    const pos = getClientPosition(e);
     pos3 = pos.x;
     pos4 = pos.y;
     
     startWidth = windowElement.offsetWidth;
     startHeight = windowElement.offsetHeight;
-    startX = windowElement.offsetLeft;
-    startY = windowElement.offsetTop;
-    
     document.ontouchend = closeResizeElement;
     document.ontouchmove = elementResizeTouch;
     
@@ -333,18 +347,18 @@ function resizeElement(windowElement) {
   }
 
   function updateResizePosition(e) {
-    var pos = getClientPos(e);
-    var deltaX = pos.x - pos3;
-    var deltaY = pos.y - pos4;
+    const pos = getClientPosition(e);
+    const deltaX = pos.x - pos3;
+    const deltaY = pos.y - pos4;
     
-    var newWidth = startWidth + deltaX;
-    var newHeight = startHeight + deltaY;
+    let newWidth = startWidth + deltaX;
+    let newHeight = startHeight + deltaY;
     
-    var menuHeight = 50;
-    var minWidth = 300;
-    var minHeight = 200;
-    var maxWidth = window.innerWidth - windowElement.offsetLeft - 10;
-    var maxHeight = window.innerHeight - windowElement.offsetTop - menuHeight - 10;
+    const menuHeight = 50;
+    const minWidth = 300;
+    const minHeight = 200;
+    const maxWidth = window.innerWidth - windowElement.offsetLeft - 10;
+    const maxHeight = window.innerHeight - windowElement.offsetTop - menuHeight - 10;
     
     newWidth = Math.max(minWidth, Math.min(newWidth, maxWidth));
     newHeight = Math.max(minHeight, Math.min(newHeight, maxHeight));
@@ -366,55 +380,60 @@ function resizeElement(windowElement) {
   resizeHandle.ontouchstart = resizeTouchStart;
 }
 
-function Maximize(id) {
-  var element = document.getElementById(id); 
-  if (element.classList.contains('max')) {
-    element.classList.remove('max');
-    dragElement(element);
-    var existingHandle = element.querySelector('.window-resize-handle');
-    if (!existingHandle) {
-      resizeElement(element);
-    }
+function restoreWindow(element) {
+  element.classList.remove('max');
+
+  const maximizeButton = element.querySelector('[aria-label="Maximize"], [aria-label="Restore"]');
+  if (maximizeButton) {
+    maximizeButton.setAttribute('aria-label', 'Maximize');
   }
-  else {
-    var header =  document.getElementById(id + "header")
+
+  dragElement(element);
+
+  if (!element.querySelector('.window-resize-handle')) {
+    resizeElement(element);
+  }
+}
+
+function Maximize(id) {
+  const element = document.getElementById(id);
+  const maximizeButton = element.querySelector('[aria-label="Maximize"], [aria-label="Restore"]');
+
+  if (element.classList.contains('max')) {
+    restoreWindow(element);
+  } else {
+    const header = document.getElementById(id + "header");
     element.classList.add('max');
-    
+    maximizeButton.setAttribute('aria-label', 'Restore');
+
     header.onmousedown = null;
-    header.onmousemove = null;
-    element.onmousedown = null;
-    element.onmousemove = null;
-    
     header.ontouchstart = null;
-    header.ontouchmove = null;
-    element.ontouchstart = null;
-    element.ontouchmove = null;
-    
-    element.style.top = 0 + "px";
-    element.style.left = 0 + "px";
 
     bringWindowToFront(element);
   }
 }
 
 function SwitchContentProj(s, e) {
-  start = document.getElementById("projects-" + s)
-  end = document.getElementById("projects-" + e)
+  const start = document.getElementById("projects-" + s);
+  const end = document.getElementById("projects-" + e);
 
-  start.classList.toggle("hide");
-  end.classList.toggle("hide");
+  start.classList.add("hide");
+  end.classList.remove("hide");
 }
 
 function SwitchContentGallery(s) {
+  const allImages = document.querySelectorAll('#gallery .gal-image');
+  const allButtons = document.querySelectorAll('#gallery .gal-button');
 
-  var allImages = document.getElementsByClassName('gal-image');
-  
-  for (var i = 0; i < allImages.length; i++) {
-    var image = allImages[i];
-    if (!image.classList.contains('hide')) {
-      image.classList.toggle("hide");
-    }
+  allImages.forEach((image) => image.classList.add('hide'));
+  allButtons.forEach((button) => {
+    const isSelected = button.dataset.galleryItem === s;
+    button.classList.toggle('active', isSelected);
+    button.setAttribute('aria-pressed', String(isSelected));
+  });
+
+  const selectedImage = document.getElementById("gal-" + s);
+  if (selectedImage) {
+    selectedImage.classList.remove('hide');
   }
-  show = document.getElementById("gal-" + s)
-  show.classList.toggle("hide");
 }
