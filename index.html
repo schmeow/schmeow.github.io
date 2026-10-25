@@ -21,6 +21,8 @@
     <button class="tab hide" id="resumetab" onclick="ShowTab('resume')"> Resume </button>
 
     <button class="tab hide" id="gallerytab" onclick="ShowTab('gallery')"> Gallery </button>
+
+    <button class="tab hide" id="musictab" onclick="ShowTab('music')"> Music </button>
     
     <span class="status-bar-field" id="time"></span>
   </div>
@@ -33,6 +35,7 @@
       <button type="button" role="menuitem" onclick="LaunchFromStart('projects')"><img src="images/projects.png" alt="">Projects</button>
       <button type="button" role="menuitem" onclick="LaunchFromStart('resume')"><img src="images/Resume.png" alt="">Resume</button>
       <button type="button" role="menuitem" onclick="LaunchFromStart('gallery')"><img src="images/gallery.png" alt="">Gallery</button>
+      <button type="button" role="menuitem" onclick="LaunchFromStart('music')"><span class="music-program-icon" aria-hidden="true"><img src="images/music.png" alt=""></span>Music</button>
     </div>
   </div>
 
@@ -41,6 +44,7 @@
     <button class="shortcut" onclick="OpenTab('about')"><img src="images/about.png" alt=""><span>About</span></button>
     <button class="shortcut" onclick="OpenTab('projects')"><img src="images/projects.png" alt=""><span>Projects</span></button>
     <button class="shortcut" onclick="OpenTab('gallery')"><img src="images/gallery.png" alt=""><span>Gallery</span></button>
+    <button class="shortcut music-shortcut" onclick="OpenTab('music')"><span class="music-program-icon" aria-hidden="true"><img src="images/music.png" alt=""></span><span>Music</span></button>
   </div>
 
   <div class="window hide" id="about" style="height: max-content">
@@ -266,12 +270,89 @@
     </div>
   </div>
 
+  <div class="window hide winamp-window" id="music">
+    <header>
+      <div class="title-bar winamp-title-bar" id="musicheader">
+        <div class="title-bar-text">WINAMP</div>
+        <div class="title-bar-controls">
+          <button aria-label="Minimize" onclick="ShowTab('music')"></button>
+          <button aria-label="Maximize" onclick="Maximize('music')"></button>
+          <button aria-label="Close" onclick="CloseTab('music')"></button>
+        </div>
+      </div>
+    </header>
+
+    <div class="window-body winamp-body">
+      <audio id="music-audio" preload="metadata"></audio>
+
+      <section class="winamp-display" aria-label="Now playing">
+        <div class="winamp-readout">
+          <div class="winamp-radio-label" aria-hidden="true"><span>R</span><span>A</span><span>D</span><span>I</span><span>O</span></div>
+          <div class="winamp-play-indicator" aria-hidden="true">▶</div>
+          <div class="winamp-time" id="music-time">00:00</div>
+          <div class="winamp-meter" aria-hidden="true">
+            <span style="height:90%"></span><span style="height:78%"></span><span style="height:68%"></span><span style="height:60%"></span><span style="height:54%"></span><span style="height:48%"></span><span style="height:43%"></span><span style="height:38%"></span><span style="height:33%"></span><span style="height:28%"></span><span style="height:23%"></span><span style="height:19%"></span><span style="height:15%"></span><span style="height:11%"></span><span style="height:7%"></span>
+          </div>
+        </div>
+        <div class="winamp-track-info">
+          <div class="winamp-track-name" id="music-track-name">NO TRACKS LOADED</div>
+          <div class="winamp-track-meta"><span>MP3</span><span>44 kHz</span><span>STEREO</span></div>
+          <div class="winamp-mode-buttons" aria-hidden="true"><span>EQ</span><span>PL</span></div>
+        </div>
+      </section>
+
+      <label class="visually-hidden" for="music-seek">Song position</label>
+      <input class="winamp-seek" id="music-seek" type="range" min="0" max="1000" value="0" disabled>
+
+      <div class="winamp-controls">
+        <div class="winamp-transport" aria-label="Playback controls">
+          <button type="button" aria-label="Previous song" onclick="MusicPrevious()">|◀</button>
+          <button type="button" aria-label="Play" id="music-play" onclick="MusicPlay()">▶</button>
+          <button type="button" aria-label="Pause" onclick="MusicPause()">Ⅱ</button>
+          <button type="button" aria-label="Stop" onclick="MusicStop()">■</button>
+          <button type="button" aria-label="Next song" onclick="MusicNext()">▶|</button>
+        </div>
+        <label class="winamp-volume" for="music-volume"><span>VOL</span><input id="music-volume" type="range" min="0" max="100" value="75"></label>
+      </div>
+
+      <section class="winamp-equalizer" aria-label="Decorative equalizer controls">
+        <div class="winamp-section-label"><strong>WINAMP EQUALIZER</strong></div>
+        <div class="winamp-eq-toolbar" aria-hidden="true">
+          <span>● ON</span><span>● AUTO</span><span>PRESETS</span>
+        </div>
+        <div class="winamp-eq-bands">
+          <label><input type="range" min="0" max="100" value="62" aria-label="60 Hz decorative equalizer band"><small>60</small></label>
+          <label><input type="range" min="0" max="100" value="40" aria-label="170 Hz decorative equalizer band"><small>170</small></label>
+          <label><input type="range" min="0" max="100" value="72" aria-label="310 Hz decorative equalizer band"><small>310</small></label>
+          <label><input type="range" min="0" max="100" value="50" aria-label="600 Hz decorative equalizer band"><small>600</small></label>
+          <label><input type="range" min="0" max="100" value="30" aria-label="1 kHz decorative equalizer band"><small>1K</small></label>
+          <label><input type="range" min="0" max="100" value="66" aria-label="3 kHz decorative equalizer band"><small>3K</small></label>
+          <label><input type="range" min="0" max="100" value="46" aria-label="6 kHz decorative equalizer band"><small>6K</small></label>
+          <label><input type="range" min="0" max="100" value="58" aria-label="12 kHz decorative equalizer band"><small>12K</small></label>
+          <label><input type="range" min="0" max="100" value="36" aria-label="14 kHz decorative equalizer band"><small>14K</small></label>
+          <label><input type="range" min="0" max="100" value="70" aria-label="16 kHz decorative equalizer band"><small>16K</small></label>
+        </div>
+      </section>
+
+      <section class="winamp-playlist" aria-label="Playlist">
+        <div class="winamp-section-label">
+          <strong>WINAMP PLAYLIST</strong>
+          <span class="visually-hidden" id="music-playlist-count">0 TRACKS</span>
+        </div>
+        <ol id="music-playlist">
+          <li class="winamp-playlist-empty">MP3 files will appear here.</li>
+        </ol>
+      </section>
+    </div>
+  </div>
 
 
 
 
 
 
+
+  <script src="music-playlist.js"></script>
   <script src="scripts.js"></script>
 </body>
 </html>

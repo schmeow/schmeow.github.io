@@ -239,6 +239,10 @@ function ShowTab(id) {
 function CloseTab(id) {
   const windowElement = document.getElementById(id);
 
+  if (id === 'music') {
+    MusicStop();
+  }
+
   if (windowElement.classList.contains('max')) {
     restoreWindow(windowElement);
   }
@@ -437,3 +441,158 @@ function SwitchContentGallery(s) {
     selectedImage.classList.remove('hide');
   }
 }
+
+const musicTracks = Array.isArray(window.MUSIC_TRACKS) ? window.MUSIC_TRACKS : [];
+let musicTrackIndex = 0;
+
+const musicAudio = document.getElementById('music-audio');
+const musicSeek = document.getElementById('music-seek');
+const musicVolume = document.getElementById('music-volume');
+const musicTime = document.getElementById('music-time');
+const musicTrackName = document.getElementById('music-track-name');
+const musicPlaylist = document.getElementById('music-playlist');
+const musicPlaylistCount = document.getElementById('music-playlist-count');
+const musicWindow = document.getElementById('music');
+
+function MusicFormatTime(seconds) {
+  if (!Number.isFinite(seconds) || seconds < 0) return '00:00';
+  const minutes = Math.floor(seconds / 60).toString().padStart(2, '0');
+  const remainingSeconds = Math.floor(seconds % 60).toString().padStart(2, '0');
+  return minutes + ':' + remainingSeconds;
+}
+
+function MusicCurrentTrack() {
+  return musicTracks[musicTrackIndex] || null;
+}
+
+function MusicTrackLabel(track) {
+  return track.artist ? track.artist + ' - ' + track.title : track.title;
+}
+
+function MusicRenderPlaylist() {
+  musicPlaylist.textContent = '';
+  musicPlaylistCount.textContent = musicTracks.length + (musicTracks.length === 1 ? ' TRACK' : ' TRACKS');
+
+  if (musicTracks.length === 0) {
+    const emptyItem = document.createElement('li');
+    emptyItem.className = 'winamp-playlist-empty';
+    emptyItem.textContent = 'MP3 files will appear here.';
+    musicPlaylist.appendChild(emptyItem);
+    document.querySelectorAll('.winamp-transport button').forEach((button) => {
+      button.disabled = true;
+    });
+    return;
+  }
+
+  musicTracks.forEach((track, index) => {
+    const item = document.createElement('li');
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = MusicTrackLabel(track);
+    button.dataset.trackIndex = String(index);
+    button.addEventListener('click', () => MusicSelect(index, true));
+    item.appendChild(button);
+    musicPlaylist.appendChild(item);
+  });
+}
+
+function MusicUpdateSelection() {
+  musicPlaylist.querySelectorAll('button').forEach((button) => {
+    const selected = Number(button.dataset.trackIndex) === musicTrackIndex;
+    button.classList.toggle('active', selected);
+    button.parentElement.classList.toggle('active', selected);
+    button.setAttribute('aria-current', selected ? 'true' : 'false');
+  });
+}
+
+function MusicLoad(index) {
+  const track = musicTracks[index];
+  if (!track) return false;
+
+  musicTrackIndex = index;
+  musicAudio.src = track.src;
+  musicAudio.load();
+  musicTrackName.textContent = MusicTrackLabel(track);
+  musicTime.textContent = '00:00';
+  musicSeek.value = '0';
+  musicSeek.disabled = false;
+  MusicUpdateSelection();
+  return true;
+}
+
+function MusicSelect(index, autoplay) {
+  if (!MusicLoad(index)) return;
+  if (autoplay) MusicPlay();
+}
+
+function MusicPlay() {
+  if (musicTracks.length === 0) return;
+  if (!musicAudio.getAttribute('src') && !MusicLoad(musicTrackIndex)) return;
+
+  musicAudio.play().catch(() => {
+    musicTrackName.textContent = 'UNABLE TO PLAY FILE';
+  });
+}
+
+function MusicPause() {
+  musicAudio.pause();
+}
+
+function MusicStop() {
+  musicAudio.pause();
+  if (musicAudio.getAttribute('src')) {
+    musicAudio.currentTime = 0;
+  }
+  musicWindow.classList.remove('playing');
+}
+
+function MusicPrevious() {
+  if (musicTracks.length === 0) return;
+  const previousIndex = musicTrackIndex > 0 ? musicTrackIndex - 1 : musicTracks.length - 1;
+  MusicSelect(previousIndex, true);
+}
+
+function MusicNext() {
+  if (musicTracks.length === 0) return;
+  const nextIndex = musicTrackIndex < musicTracks.length - 1 ? musicTrackIndex + 1 : 0;
+  MusicSelect(nextIndex, true);
+}
+
+musicVolume.addEventListener('input', () => {
+  musicAudio.volume = Number(musicVolume.value) / 100;
+});
+
+musicSeek.addEventListener('input', () => {
+  if (!Number.isFinite(musicAudio.duration) || musicAudio.duration <= 0) return;
+  musicAudio.currentTime = (Number(musicSeek.value) / 1000) * musicAudio.duration;
+});
+
+musicAudio.addEventListener('loadedmetadata', () => {
+  musicSeek.disabled = false;
+});
+
+musicAudio.addEventListener('timeupdate', () => {
+  musicTime.textContent = MusicFormatTime(musicAudio.currentTime);
+  if (Number.isFinite(musicAudio.duration) && musicAudio.duration > 0) {
+    musicSeek.value = String(Math.round((musicAudio.currentTime / musicAudio.duration) * 1000));
+  }
+});
+
+musicAudio.addEventListener('play', () => musicWindow.classList.add('playing'));
+musicAudio.addEventListener('pause', () => musicWindow.classList.remove('playing'));
+musicAudio.addEventListener('ended', () => {
+  if (musicTrackIndex < musicTracks.length - 1) {
+    MusicSelect(musicTrackIndex + 1, true);
+  } else {
+    MusicStop();
+  }
+});
+
+musicAudio.addEventListener('error', () => {
+  musicTrackName.textContent = 'FILE NOT FOUND';
+  musicWindow.classList.remove('playing');
+});
+
+musicAudio.volume = Number(musicVolume.value) / 100;
+MusicRenderPlaylist();
+if (musicTracks.length > 0) MusicLoad(0);
